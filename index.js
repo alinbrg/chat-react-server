@@ -12,6 +12,7 @@ const io = socketio(server, {
 	cors: {
 		origin: "https://poetic-cat-9b4685.netlify.app/",
 		methods: ["GET", "POST"],
+		allowedHeaders: ["Access-Control-Allow-Origin"],
 	},
 });
 

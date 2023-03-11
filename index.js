@@ -1,6 +1,7 @@
 const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 5000;
 const router = require("./router");
@@ -8,12 +9,10 @@ const { addUser, getUser, removeUser, getUsersInRoom } = require("./users");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server, {
-	cors: {
-		origin: "http://localhost:3000",
-		methods: ["GET", "POST"],
-	},
-});
+const io = socketio(server);
+
+app.use(router);
+app.use(cors());
 
 io.on("connection", (socket) => {
 	socket.on("join", ({ name, room }, callback) => {
@@ -62,8 +61,6 @@ io.on("connection", (socket) => {
 		}
 	});
 });
-
-app.use(router);
 
 server.listen(PORT, () => {
 	console.log(`server has started on port ${PORT}`);

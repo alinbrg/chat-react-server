@@ -1,7 +1,6 @@
 const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
-const cors = require("cors");
 
 const PORT = process.env.PORT || 5000;
 const router = require("./router");
@@ -9,10 +8,14 @@ const { addUser, getUser, removeUser, getUsersInRoom } = require("./users");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server, {
+	cors: {
+		origin: "https://poetic-cat-9b4685.netlify.app/",
+		methods: ["GET", "POST"],
+	},
+});
 
 app.use(router);
-app.use(cors());
 
 io.on("connection", (socket) => {
 	socket.on("join", ({ name, room }, callback) => {
